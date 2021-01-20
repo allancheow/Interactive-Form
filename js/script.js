@@ -10,7 +10,9 @@ const colorElement = document.querySelector(`#color`);
 const colorElements = document.querySelector(`#color`).children;
 const jsPunsElements = document.querySelectorAll(`[data-theme="js puns"]`);
 const heartJsElements = document.querySelectorAll(`[data-theme="heart js"]`);
-console.log(heartJsElements);
+const activitiesElement = document.querySelector('#activities');
+const activitiesCostElement = document.querySelector('#activities-cost');
+console.log(activitiesCostElement);
 
 // Sets 'Name' input as focus on page load
 nameElement.focus();
@@ -33,20 +35,45 @@ titleSelectElement.addEventListener(`change`, e => {
 
 // Disable "Color" selector by default
 colorElement.disabled = true;
+
+/**
+ * Small function to remove repetitive code.
+ * This either show/hide color options based on
+ * "Design" type selected
+ *
+ * @param {object} selectionGroup - The list of objects to traverse
+ * @param {text} displayType - display property to enable
+ */  
+const showColors = (selectionGroup, displayType) => {
+    for ( let i = 0; i < selectionGroup.length; i++ ) {
+        selectionGroup[i].style.display = displayType;
+    }
+}
+
 designElement.addEventListener(`change`, e => {
     // Enable "Color" selector on "Design" selection
     colorElement.disabled = false;
     const designValue = e.target.value;
-    for ( let i = 0; i < colorElements.length; i++ ) {
-        colorElements[i].style.display = `none`;
-    }
+    // Hides all "Color" options by default
+    showColors(colorElements, `none`);
+
     if ( designValue === `js puns` ) {
-        for ( let i = 0; i < jsPunsElements.length; i++ ) {
-            jsPunsElements[i].style.display = `block`;
-        }
+        showColors(jsPunsElements, `block`);
     } else {
-        for ( let i = 0; i < heartJsElements.length; i++ ) {
-            heartJsElements[i].style.display = `block`;
-        }
+        showColors(heartJsElements, `block`);
     }
+});
+
+// Initialize "Total" to zero
+let totalCost = 0;
+
+activitiesElement.addEventListener('change', e => {
+    const activityCheck = e.target;
+    const activityValue = parseInt(e.target.getAttribute(`data-cost`));
+    if ( activityCheck.checked ) {
+        totalCost += activityValue;
+    } else {        
+        totalCost -= activityValue;
+    }
+    activitiesCostElement.innerHTML = `Total: $${totalCost}`;
 });
