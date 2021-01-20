@@ -94,6 +94,7 @@ designElement.addEventListener(`change`, e => {
 activitiesElement.addEventListener('change', e => {
     const activityCheck = e.target;
     const activityValue = parseInt(e.target.getAttribute(`data-cost`));
+    const activityTime = e.target.getAttribute(`data-day-and-time`);
     if ( activityCheck.checked ) {
         totalCost += activityValue;
         totalActivitiesChecked++;
@@ -102,17 +103,31 @@ activitiesElement.addEventListener('change', e => {
         totalActivitiesChecked--;
     }
     activitiesCostElement.innerHTML = `Total: $${totalCost}`;
+    
+    // For loop to determine the checked item and disable the duplicate time event
+    for ( let i = 0; i < activitiesElements.length; i++) {
+        if ( activitiesElements[i] !== activityCheck && activitiesElements[i].getAttribute(`data-day-and-time`) === activityTime ) {
+            if( activityCheck.checked === true ) {
+                activitiesElements[i].parentElement.classList.add(`disabled`);
+                activitiesElements[i].disabled = true;
+            } else {       
+                activitiesElements[i].parentElement.classList.remove(`disabled`);
+                activitiesElements[i].disabled = false;
+            }
+        }
+    }
 });
 
 // Set focus styling on Activities when focused
 // Code borrowed from Checkboxes warm ups
-activitiesElements.forEach((element) => {
+activitiesElements.forEach( element => {
     element.addEventListener('focus', e => element.parentElement.classList.add('focus'));
     element.addEventListener('blur', e => {
         const active = document.querySelector('.focus');
         if (active) active.classList.remove('focus');
     })
 });
+
 
 // Displays the corresponding payment message
 paymentElement.addEventListener('change', e => {
