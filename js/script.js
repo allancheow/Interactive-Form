@@ -64,29 +64,24 @@ titleSelectElement.addEventListener(`change`, e => {
     }
 });
 
-/**
- * This either show/hide color group options
- * based on "Design" type selected
- *
- * @param {object} selectionGroup - The list of objects to traverse
- * @param {text} displayType - display property to enable
- */  
-const showColorOptions = (selectionGroup, displayType) => {
-    for ( let i = 0; i < selectionGroup.length; i++ ) {
-        selectionGroup[i].style.display = displayType;
-    }
-}
 
 designElement.addEventListener(`change`, e => {
     // Enable "Color" dropdown on any "Design" field selection
     colorElement.disabled = false;
-    const designValue = e.target.value;
-    // Hides all "Color" dropdown options by default
-    showColorOptions(colorElements, `none`);
-    if ( designValue === `js puns` ) {
-        showColorOptions(jsPunsElements, `block`);
-    } else {
-        showColorOptions(heartJsElements, `block`);
+    
+    for ( let i = 0; i < colorElements.length; i++ ) {
+        const designValue = e.target.value;
+        let colorOption = colorElements[i].getAttribute(`data-theme`);
+        
+        // Compares the design selection with the options and
+        // display corresponding shirt types
+        if ( designValue === colorOption ) {
+            colorElements[i].hidden = false;
+            colorElements[i].setAttribute(`selected`, ``);
+        } else {        
+            colorElements[i].hidden = true;
+            colorElements[i].removeAttribute(`selected`);
+        }
     }
 });
 
