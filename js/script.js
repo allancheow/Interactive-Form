@@ -4,7 +4,7 @@
 `use strict`;
 
 // Variable to store form inputs and elements
-const form = document.querySelector("form");
+const form = document.querySelector(`form`);
 const nameElement = document.querySelector(`#name`);
 const emailElement = document.querySelector(`#email`);
 const titleSelectElement = document.querySelector(`#title`);
@@ -44,11 +44,11 @@ bitcoinElement.style.display = `none`;
 paymentElement.value = `credit-card`;
 
 // RegEx assingment for validation
-const nameRegEx = `[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?`;
-const emailRegEx = `(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))`;
-const ccNumRegEx = `\d{13,16}`;
-const zipRegEx = `\d{5}`;
-const cvvRegEx = `\d{3}`;
+const nameRegEx = new RegExp(/^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/);
+const emailRegEx = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, `i`);
+const ccNumRegEx = new RegExp(/^\d{13,16}$/);
+const zipRegEx = new RegExp(/^\d{5}$/);
+const cvvRegEx = new RegExp(/^\d{3}$/);
 
 
 // Triggers the 'Other job role?' text field when Other Job Role is selected
@@ -93,8 +93,8 @@ designElement.addEventListener(`change`, e => {
 // Listener to calculate total cost and count number of checkbox for validation
 activitiesElement.addEventListener('change', e => {
     const activityCheck = e.target;
-    const activityValue = parseInt(e.target.getAttribute(`data-cost`));
-    const activityTime = e.target.getAttribute(`data-day-and-time`);
+    const activityValue = parseInt(activityCheck.getAttribute(`data-cost`));
+    const activityTime = activityCheck.getAttribute(`data-day-and-time`);
     if ( activityCheck.checked ) {
         totalCost += activityValue;
         totalActivitiesChecked++;
@@ -162,6 +162,8 @@ const validationPass = element => {
 /**
  * Function expression to set failed validation styling
  * for element with invalid entry and show error messaging
+ * Update: Added additional messaging based on blank 
+ * field value
  *
  * @param {HTML element} element - Selected element
  */   
@@ -169,6 +171,23 @@ const validationFail = element => {
     element.parentElement.classList.add(`not-valid`);
     element.parentElement.classList.remove(`valid`);
     element.parentElement.lastElementChild.style.display = `block`;
+    if ( element === emailElement && emailElement.value === `` ) {
+        element.nextElementSibling.innerHTML = `Email address cannot be blank`;
+    } else if ( element === emailElement && emailElement.value !== `` ) {
+        element.nextElementSibling.innerHTML = `Email address must be formatted correctly`;
+    } else if ( element === ccNumElement && ccNumElement.value === `` ) {
+        element.nextElementSibling.innerHTML = `Credit card number cannot be blank`;
+    } else if ( element === ccNumElement && ccNumElement.value !== `` ) {
+        element.nextElementSibling.innerHTML = `Credit card number must be between 13 - 16 digits`;
+    } else if ( element === zipElement && zipElement.value === `` ) {
+        element.nextElementSibling.innerHTML = `Zip Code cannot be blank`;
+    } else if ( element === zipElement && zipElement.value !== `` ) {
+        element.nextElementSibling.innerHTML = `Zip Code must be 5 digits`;
+    } else if ( element === cvvElement && cvvElement.value === `` ) {
+        element.nextElementSibling.innerHTML = `CVV cannot be blank`;
+    } else if ( element === cvvElement && cvvElement.value !== `` ) {
+        element.nextElementSibling.innerHTML = `CVV must be 3 digits`;
+    }
 }
 
 /**
@@ -179,12 +198,12 @@ const validationFail = element => {
  * @param {RegEx} regExPattern - RegEx pattern used for test
  */  
 const elementValidator = (elementName, regExPattern) => {
-    const isValid = /^regExPattern$/i.test(elementName.value);  
+    const isValid = regExPattern.test(elementName.value); 
     if ( isValid ) {
       validationPass(elementName);
     } else {
       validationFail(elementName);
-    }    
+    }
     return isValid;
 }
 
@@ -235,4 +254,65 @@ form.addEventListener('submit', e => {
       e.preventDefault();
     }
 
+});
+
+// Utilize focusout event listener to find out of focused  
+// input field and display appropiate error message
+form.addEventListener('focusout', e => {
+    // Switch statement to trigger corresponding error message
+    switch (e.target) {
+        case nameElement:            
+            if (!elementValidator(nameElement, nameRegEx)) {
+                console.log('Invalid name prevented submission');
+                e.preventDefault();
+            }
+            break;
+        
+        case emailElement:
+            if (!elementValidator(emailElement, emailRegEx)) {
+            console.log('Invalid email prevented submission');
+            e.preventDefault();
+            }
+            break;
+
+        case activitiesBoxElement.lastElementChild.firstElementChild:  
+            if (!activitiesValidator() && e.target.getAttribute(`name`) === `express` ) {
+                console.log('Invalid number of activities selected prevented submission');
+                e.preventDefault();
+            }
+            break;
+
+        case ccNumElement:
+            if (!elementValidator(ccNumElement, ccNumRegEx)) {
+                console.log('Invalid credit card number prevented submission');
+                e.preventDefault();
+            }
+            break;        
+        
+        case zipElement:
+            if (!elementValidator(zipElement, zipRegEx)) {
+            console.log('Invalid zip code prevented submission');
+            e.preventDefault();
+            }
+            break;
+        
+        case cvvElement:
+            if (!elementValidator(cvvElement, cvvRegEx)) {
+            console.log('Invalid cvv number prevented submission');
+            e.preventDefault();
+            }
+            break;
+    }
+});
+
+// Second focusout event listener to find any updates made  
+// in the checkbox fields and display appropiate error message
+activitiesBoxElement.addEventListener('focusout', e => {
+    const checkBoxGroup = e.target.parentElement.parentElement;
+    if ( (totalActivitiesChecked < 0 && checkBoxGroup !== activitiesBoxElement) || (totalActivitiesChecked > 0 && checkBoxGroup === activitiesBoxElement) ) {
+        if (!activitiesValidator()) {
+            console.log('Invalid number of activities selected prevented submission');
+            e.preventDefault();
+        }
+    }    
 });
