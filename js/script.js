@@ -13,8 +13,6 @@ const otherJobElement = document.querySelector(`#other-job-role`);
 const designElement = document.querySelector(`#design`);
 const colorElement = document.querySelector(`#color`);
 const colorElements = document.querySelector(`#color`).children;
-const jsPunsElements = document.querySelectorAll(`[data-theme="js puns"]`);
-const heartJsElements = document.querySelectorAll(`[data-theme="heart js"]`);
 const activitiesElement = document.querySelector('#activities');
 const activitiesElements = document.querySelectorAll('#activities input');
 const activitiesBoxElement = document.querySelector('#activities-box');
