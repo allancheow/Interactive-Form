@@ -41,7 +41,7 @@ bitcoinElement.style.display = `none`;
 // Sets the deafult selection to Credit Card
 paymentElement.value = `credit-card`;
 
-// RegEx assingment for validation
+// RegEx assignment for validation
 const nameRegEx = new RegExp(/^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/);
 const emailRegEx = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, `i`);
 const ccNumRegEx = new RegExp(/^\d{13,16}$/);
@@ -250,7 +250,7 @@ form.addEventListener('submit', e => {
 });
 
 // Utilize focusout event listener to find out of focused  
-// input field and display appropiate error message
+// input field and display appropriate error message
 form.addEventListener('focusout', e => {
     // Switch statement to trigger corresponding error message
     switch (e.target) {
@@ -299,7 +299,7 @@ form.addEventListener('focusout', e => {
 });
 
 // Second focusout event listener to find any updates made  
-// in the checkbox fields and display appropiate error message
+// in the checkbox fields and display appropriate error message
 activitiesBoxElement.addEventListener('focusout', e => {
     const checkBoxGroup = e.target.parentElement.parentElement;
     if ( (totalActivitiesChecked < 0 && checkBoxGroup !== activitiesBoxElement) || (totalActivitiesChecked > 0 && checkBoxGroup === activitiesBoxElement) ) {
