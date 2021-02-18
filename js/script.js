@@ -3,7 +3,7 @@
 // Applying per MDN site https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 `use strict`;
 
-// Variable to store form inputs and elements
+// Initiate variables to be used
 const form = document.querySelector(`form`);
 const nameElement = document.querySelector(`#name`);
 const emailElement = document.querySelector(`#email`);
@@ -250,7 +250,7 @@ form.addEventListener('submit', e => {
 });
 
 // Utilize focusout event listener to find out of focused  
-// input field and display appropriate error message
+// input field and display appropiate error message
 form.addEventListener('focusout', e => {
     // Switch statement to trigger corresponding error message
     switch (e.target) {
