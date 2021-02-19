@@ -250,7 +250,7 @@ form.addEventListener('submit', e => {
 });
 
 // Utilize focusout event listener to find out of focused  
-// input field and display appropiate error message
+// input field and display appropriate error message
 form.addEventListener('focusout', e => {
     // Switch statement to trigger corresponding error message
     switch (e.target) {
